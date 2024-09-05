@@ -122,7 +122,7 @@ in {
 
       # add thefuck to zsh
       eval $(thefuck --alias)
-      eval "$(zoxide init zsh)"
+      eval "$(zoxide init --cmd j zsh)"
     '';
   };
 
