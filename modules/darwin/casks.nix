@@ -9,7 +9,6 @@ _:
 
   # Communication Tools
   "discord"
-  "slack"
   "zoom"
   "signal@beta"
 
