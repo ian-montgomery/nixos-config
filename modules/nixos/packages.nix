@@ -5,7 +5,6 @@ let shared-packages = import ../shared/packages.nix { inherit pkgs; }; in
 shared-packages ++ [
 
   # Security and authentication
-  _1password-gui
   yubikey-agent
   keepassxc
 
@@ -22,10 +21,7 @@ shared-packages ++ [
   fontconfig
   font-manager
 
-  # Printers and drivers
-  brlaser # printer driver
-
-  # Calculators
+  # Productivity tools
   bc # old school calculator
   galculator
 
@@ -36,20 +32,12 @@ shared-packages ++ [
   # Messaging and chat applications
   cider # Apple Music on Linux
   discord
-  hexchat # Chat
   fractal # Matrix.org messaging app
-  #tdesktop # telegram desktop
-
   # Testing and development tools
-  beekeeper-studio
-  cypress # Functional testing framework using headless chrome
-  chromedriver
   direnv
   rofi
   rofi-calc
-  qmk
   postgresql
-  libusb1 # for Xbox controller
   libtool # for Emacs vterm
 
   # Screenshot and recording tools
@@ -66,6 +54,7 @@ shared-packages ++ [
   xclip # For the org-download package in Emacs
   xorg.xwininfo # Provides a cursor to click and learn about windows
   xorg.xrandr
+  zed-editor
 
   # File and system utilities
   inotify-tools # inotifywait, inotifywatch - For file system events
@@ -73,21 +62,18 @@ shared-packages ++ [
   libnotify
   ledger-live-desktop
   playerctl # Control media players from command line
-  pcmanfm # Our file browser
+  pcmanfm # File browser
   sqlite
   xdg-utils
 
   # Other utilities
-  yad # I use yad-calendar with polybar
+  yad # yad-calendar is used with polybar
   xdotool
   google-chrome
+  signal-desktop
+  firefox-devedition
 
   # PDF viewer
   zathura
 
-  # Music and entertainment
-  spotify
-
-  # VR
-  immersed-vr
 ]

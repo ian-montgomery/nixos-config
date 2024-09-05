@@ -1,83 +1,128 @@
 { config, pkgs, lib, ... }:
 
-let name = "Dustin Lyons";
-    user = "dustin";
-    email = "dustin@dlyons.dev"; in
-{
-
-  direnv = {
-      enable = true;
-      enableZshIntegration = true;
-      nix-direnv.enable = true;
+let
+  name = "Ian Montgomery";
+  user = "ian";
+  email = "ian@ianmontgomery.dev";
+in {
+  kitty = {
+    enable = true;
+    font = {
+      name = "Jetbrains Mono";
+      size = 13.0;
     };
-
+    keybindings = { "cmd+shift+t" = "select_tab"; };
+    settings = {
+      tab_bar_style = "powerline";
+      tab_title_max_length = 16;
+      enable_audio_bell = "no";
+      tab_bar_edge = "top";
+    };
+    theme = "VSCode_Dark";
+  };
+  helix = {
+    enable = true;
+    defaultEditor = true;
+    settings = {
+      theme = "dark_plus";
+      editor = {
+        lsp.display-messages = true;
+        cursor-shape.insert = "bar";
+        soft-wrap.enable = true;
+      };
+      keys.normal = { space.space = "file_picker"; };
+    };
+    languages.language = [{
+      name = "nix";
+      auto-format = true;
+      formatter.command = "${pkgs.nixfmt}/bin/nixfmt";
+    }];
+  };
   zsh = {
     enable = true;
+    enableCompletion = true;
     autocd = false;
-    cdpath = [ "~/.local/share/src" ];
+    autosuggestion.enable = true;
+    syntaxHighlighting.enable = true;
     plugins = [
       {
-          name = "powerlevel10k";
-          src = pkgs.zsh-powerlevel10k;
-          file = "share/zsh-powerlevel10k/powerlevel10k.zsh-theme";
+        name = "powerlevel10k";
+        src = pkgs.zsh-powerlevel10k;
+        file = "share/zsh-powerlevel10k/powerlevel10k.zsh-theme";
       }
       {
-          name = "powerlevel10k-config";
-          src = lib.cleanSource ./config;
-          file = "p10k.zsh";
+        name = "powerlevel10k-config";
+        src = lib.cleanSource ./config;
+        file = "p10k.zsh";
+      }
+      {
+        name = "zsh-autosuggestions";
+        src = pkgs.zsh-autosuggestions;
+        file = "share/zsh-autosuggestions/zsh-autosuggestions.zsh";
+      }
+      {
+        name = "zsh-syntax-highlighting";
+        src = pkgs.zsh-syntax-highlighting;
+        file = "share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh";
       }
     ];
+
     initExtraFirst = ''
       if [[ -f /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh ]]; then
         . /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
         . /nix/var/nix/profiles/default/etc/profile.d/nix.sh
       fi
 
-      if [[ "$(uname)" == "Linux" ]]; then
-        alias pbcopy='xclip -selection clipboard'
-      fi
-
       # Define variables for directories
       export PATH=$HOME/.pnpm-packages/bin:$HOME/.pnpm-packages:$PATH
       export PATH=$HOME/.npm-packages/bin:$HOME/bin:$PATH
-      export PATH=$HOME/.composer/vendor/bin:$PATH
       export PATH=$HOME/.local/share/bin:$PATH
-
-      export PNPM_HOME=~/.pnpm-packages
-      alias pn=pnpm
-      alias px=pnpx
 
       # Remove history data we don't want to see
       export HISTIGNORE="pwd:ls:cd"
 
-      # Ripgrep alias
-      alias search='rg -p --glob "!node_modules/*" --glob "!vendor/*" "$@"'
+      # Neovim is my editor
+      export ALTERNATE_EDITOR="vim"
+      export EDITOR="hx"
+      export VISUAL="hx"
 
-      # Emacs is my editor
-      export ALTERNATE_EDITOR=""
-      export EDITOR="emacsclient -t"
-      export VISUAL="emacsclient -c -a emacs"
-      e() {
-          emacsclient -t "$@"
+      # nix shortcuts
+      shell() {
+          nix-shell '<nixpkgs>' -A "$1"
       }
-
-      # Laravel Artisan
-      alias art='php artisan'
-
-      # PHP Deployer
-      alias deploy='dep deploy'
-
-      alias watch="tmux new-session -d -s watch-session 'bash ./bin/watch.sh'"
-      alias unwatch='tmux kill-session -t watch-session'
 
       # Use difftastic, syntax-aware diffing
       alias diff=difft
 
-      # Always color ls and group directories
-      alias ls='ls --color=auto'
+      #git aliases
+      alias g=git
+      alias ga='git add'
+      alias gaa='git add --all'
+      alias gb='git branch'
+      alias gc='git commit -v'
+      alias gc!='git commit -v --amend'
+      alias gcb='git checkout -b'
+      alias gcl='git clone --recurse-submodules'
+      alias gpristine='git reset --hard && git clean -diffx'
+      alias gcmsg='git commit -m'
+      alias gco='git checkout'
+      alias gd='git diff'
+      alias gf='git fetch'
+      alias ggp='git push origin $(current_branch)'
+      alias ggpnp='gpr && ggp'
+      alias glp='git log --pretty=<format>'
+      alias gpr='git pull --rebase'
+      alias grbi='git rebase -i'
+      alias grev='git revert'
+      alias gst='git status'
+      alias gupa='git pull --rebase --autostash'
 
-      # Reboot into my dual boot Windows partition
-      alias windows='systemctl reboot --boot-loader-entry=auto-windows'
+      # Always color ls and group directories
+      alias ls='eza -a' 
+
+      # add thefuck to zsh
+      eval $(thefuck --alias)
+      eval "$(zoxide init zsh)"
     '';
   };
 
@@ -86,16 +131,13 @@ let name = "Dustin Lyons";
     ignores = [ "*.swp" ];
     userName = name;
     userEmail = email;
-    lfs = {
-      enable = true;
-    };
+    lfs = { enable = true; };
     extraConfig = {
       init.defaultBranch = "main";
       core = {
-	    editor = "vim";
+        editor = "hx";
         autocrlf = "input";
       };
-      commit.gpgsign = true;
       pull.rebase = true;
       rebase.autoStash = true;
     };
@@ -103,7 +145,12 @@ let name = "Dustin Lyons";
 
   vim = {
     enable = true;
-    plugins = with pkgs.vimPlugins; [ vim-airline vim-airline-themes copilot-vim vim-startify vim-tmux-navigator ];
+    plugins = with pkgs.vimPlugins; [
+      vim-airline
+      vim-airline-themes
+      vim-startify
+      vim-tmux-navigator
+    ];
     settings = { ignorecase = true; };
     extraConfig = ''
       "" General
@@ -208,86 +255,58 @@ let name = "Dustin Lyons";
 
       let g:airline_theme='bubblegum'
       let g:airline_powerline_fonts = 1
-      '';
-     };
+    '';
+  };
 
   alacritty = {
     enable = true;
     settings = {
-      cursor = {
-        style = "Block";
-      };
-
-      window = {
-        opacity = 1.0;
-        padding = {
-          x = 24;
-          y = 24;
-        };
-      };
-
       font = {
         normal = {
-          family = "MesloLGS NF";
+          family = "Jetbrainsmono Nerd Font";
           style = "Regular";
         };
         size = lib.mkMerge [
           (lib.mkIf pkgs.stdenv.hostPlatform.isLinux 10)
-          (lib.mkIf pkgs.stdenv.hostPlatform.isDarwin 14)
+          (lib.mkIf pkgs.stdenv.hostPlatform.isDarwin 13)
         ];
       };
-
-      colors = {
-        primary = {
-          background = "0x1f2528";
-          foreground = "0xc0c5ce";
-        };
-
-        normal = {
-          black = "0x1f2528";
-          red = "0xec5f67";
-          green = "0x99c794";
-          yellow = "0xfac863";
-          blue = "0x6699cc";
-          magenta = "0xc594c5";
-          cyan = "0x5fb3b3";
-          white = "0xc0c5ce";
-        };
-
-        bright = {
-          black = "0x65737e";
-          red = "0xec5f67";
-          green = "0x99c794";
-          yellow = "0xfac863";
-          blue = "0x6699cc";
-          magenta = "0xc594c5";
-          cyan = "0x5fb3b3";
-          white = "0xd8dee9";
-        };
+      window = {
+        dynamic_title = true;
+        dynamic_padding = true;
       };
     };
   };
-
   ssh = {
     enable = true;
+    addKeysToAgent = "yes";
     includes = [
       (lib.mkIf pkgs.stdenv.hostPlatform.isLinux
-        "/home/${user}/.ssh/config_external"
-      )
+        "/home/${user}/.ssh/config_external")
       (lib.mkIf pkgs.stdenv.hostPlatform.isDarwin
-        "/Users/${user}/.ssh/config_external"
-      )
+        "/Users/${user}/.ssh/config_external")
     ];
+    extraConfig = ''
+      IgnoreUnknown UseKeychain
+      UseKeychain yes
+    '';
     matchBlocks = {
       "github.com" = {
         identitiesOnly = true;
         identityFile = [
           (lib.mkIf pkgs.stdenv.hostPlatform.isLinux
-            "/home/${user}/.ssh/id_github"
-          )
+            "/home/${user}/.ssh/id_github")
           (lib.mkIf pkgs.stdenv.hostPlatform.isDarwin
-            "/Users/${user}/.ssh/id_github"
-          )
+            "/Users/${user}/.ssh/id_github")
+        ];
+      };
+      "codeberg.org" = {
+        identitiesOnly = true;
+        identityFile = [
+          (lib.mkIf pkgs.stdenv.hostPlatform.isLinux
+            "/home/${user}/.ssh/id_ed25519_codeberg")
+          (lib.mkIf pkgs.stdenv.hostPlatform.isDarwin
+            "/Users/${user}/.ssh/id_ed25519_codeberg")
         ];
       };
     };
@@ -303,7 +322,7 @@ let name = "Dustin Lyons";
       {
         plugin = power-theme;
         extraConfig = ''
-           set -g @tmux_power_theme 'gold'
+          set -g @tmux_power_theme 'violet'
         '';
       }
       {
@@ -312,7 +331,7 @@ let name = "Dustin Lyons";
         # Use XDG data directory
         # https://github.com/tmux-plugins/tmux-resurrect/issues/348
         extraConfig = ''
-          set -g @resurrect-dir '/Users/dustin/.cache/tmux/resurrect'
+          set -g @resurrect-dir '$HOME/.cache/tmux/resurrect'
           set -g @resurrect-capture-pane-contents 'on'
           set -g @resurrect-pane-contents-area 'visible'
         '';
@@ -374,6 +393,7 @@ let name = "Dustin Lyons";
       bind-key -T copy-mode-vi 'C-k' select-pane -U
       bind-key -T copy-mode-vi 'C-l' select-pane -R
       bind-key -T copy-mode-vi 'C-\' select-pane -l
-      '';
-    };
+    '';
+  };
+
 }
