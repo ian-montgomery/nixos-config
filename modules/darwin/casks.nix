@@ -4,7 +4,6 @@ _:
   # Development Tools
   "homebrew/cask/docker"
   "visual-studio-code"
-  "iterm2"
   "zed"
 
   # Communication Tools
@@ -29,4 +28,5 @@ _:
   # Browsers
   "firefox@developer-edition"
   "google-chrome"
+  "zen-browser"
 ]

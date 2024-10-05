@@ -11,14 +11,22 @@ in {
       name = "Jetbrains Mono";
       size = 13.0;
     };
-    keybindings = { "cmd+shift+t" = "select_tab"; };
+    keybindings = {
+      "cmd+shift+t" = "new_tab_with_cwd";
+      "cmd+shift+enter" = "new_window_with_cwd";
+    };
     settings = {
       tab_bar_style = "powerline";
       tab_title_max_length = 16;
       enable_audio_bell = "no";
       tab_bar_edge = "top";
+      cursor_shape = "block";
     };
     theme = "VSCode_Dark";
+    shellIntegration = {
+      enableZshIntegration = true;
+      mode = "no-cursor";
+    };
   };
   helix = {
     enable = true;
@@ -32,11 +40,6 @@ in {
       };
       keys.normal = { space.space = "file_picker"; };
     };
-    languages.language = [{
-      name = "nix";
-      auto-format = true;
-      formatter.command = "${pkgs.nixfmt}/bin/nixfmt";
-    }];
   };
   zsh = {
     enable = true;
@@ -256,26 +259,6 @@ in {
       let g:airline_theme='bubblegum'
       let g:airline_powerline_fonts = 1
     '';
-  };
-
-  alacritty = {
-    enable = true;
-    settings = {
-      font = {
-        normal = {
-          family = "Jetbrainsmono Nerd Font";
-          style = "Regular";
-        };
-        size = lib.mkMerge [
-          (lib.mkIf pkgs.stdenv.hostPlatform.isLinux 10)
-          (lib.mkIf pkgs.stdenv.hostPlatform.isDarwin 13)
-        ];
-      };
-      window = {
-        dynamic_title = true;
-        dynamic_padding = true;
-      };
-    };
   };
   ssh = {
     enable = true;

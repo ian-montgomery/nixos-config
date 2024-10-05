@@ -1,14 +1,17 @@
 { inputs, config, pkgs, ... }:
 
-let user = "ian"; in
+let user = "ian";
 
-{
+in {
 
   imports = [
     ../../modules/darwin/home-manager.nix
     ../../modules/shared
     ../../modules/shared/cachix
   ];
+
+  # Addind build uid to disable check for macOS Sequoia
+  ids.uids.nixbld = 300;
 
   # Auto upgrade nix package and the daemon service.
   services.nix-daemon.enable = true;
@@ -21,7 +24,11 @@ let user = "ian"; in
     gc = {
       user = "root";
       automatic = true;
-      interval = { Weekday = 0; Hour = 2; Minute = 0; };
+      interval = {
+        Weekday = 0;
+        Hour = 2;
+        Minute = 0;
+      };
       options = "--delete-older-than 30d";
     };
 
@@ -35,13 +42,14 @@ let user = "ian"; in
   system.checks.verifyNixPath = false;
 
   # Load configuration that is shared across systems
-  environment.systemPackages = with pkgs; [
+  environment.systemPackages = with pkgs;
+    [
 
-  ] ++ (import ../../modules/shared/packages.nix { inherit pkgs; });
-  
+    ] ++ (import ../../modules/shared/packages.nix { inherit pkgs; });
+
   # Add ability to used TouchID for sudo authentication
   security.pam.enableSudoTouchIdAuth = true;
-  
+
   system = {
     stateVersion = 4;
 
@@ -69,9 +77,7 @@ let user = "ian"; in
         tilesize = 48;
       };
 
-      finder = {
-        _FXShowPosixPathInTitle = false;
-      };
+      finder = { _FXShowPosixPathInTitle = false; };
 
       trackpad = {
         Clicking = true;

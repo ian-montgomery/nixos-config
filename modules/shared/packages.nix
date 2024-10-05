@@ -82,6 +82,8 @@ with pkgs; [
   nb
   yazi
   ddgr
+  circumflex
+  aerc
 
   # Python packages
   python39
