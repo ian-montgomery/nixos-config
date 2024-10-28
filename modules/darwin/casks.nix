@@ -5,7 +5,8 @@ _:
   "homebrew/cask/docker"
   "visual-studio-code"
   "zed"
-
+  "orbstack"
+  
   # Communication Tools
   "discord"
   "zoom"
@@ -27,6 +28,7 @@ _:
 
   # Browsers
   "firefox@developer-edition"
+  "firefox"
   "google-chrome"
-  "zen-browser"
+  "brave-browser"
 ]

@@ -22,7 +22,7 @@ in {
       tab_bar_edge = "top";
       cursor_shape = "block";
     };
-    theme = "VSCode_Dark";
+    themeFile = "VSCode_Dark";
     shellIntegration = {
       enableZshIntegration = true;
       mode = "no-cursor";
@@ -87,7 +87,7 @@ in {
       # Neovim is my editor
       export ALTERNATE_EDITOR="vim"
       export EDITOR="hx"
-      export VISUAL="hx"
+      export VISUAL="code"
 
       # nix shortcuts
       shell() {
@@ -96,29 +96,6 @@ in {
 
       # Use difftastic, syntax-aware diffing
       alias diff=difft
-
-      #git aliases
-      alias g=git
-      alias ga='git add'
-      alias gaa='git add --all'
-      alias gb='git branch'
-      alias gc='git commit -v'
-      alias gc!='git commit -v --amend'
-      alias gcb='git checkout -b'
-      alias gcl='git clone --recurse-submodules'
-      alias gpristine='git reset --hard && git clean -diffx'
-      alias gcmsg='git commit -m'
-      alias gco='git checkout'
-      alias gd='git diff'
-      alias gf='git fetch'
-      alias ggp='git push origin $(current_branch)'
-      alias ggpnp='gpr && ggp'
-      alias glp='git log --pretty=<format>'
-      alias gpr='git pull --rebase'
-      alias grbi='git rebase -i'
-      alias grev='git revert'
-      alias gst='git status'
-      alias gupa='git pull --rebase --autostash'
 
       # Always color ls and group directories
       alias ls='eza -a' 
