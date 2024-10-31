@@ -23,6 +23,7 @@ with pkgs; [
   zoxide
   xclip
   lazygit
+  nixd
 
   # Encryption and security tools
   age

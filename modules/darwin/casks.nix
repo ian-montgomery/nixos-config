@@ -17,6 +17,7 @@ _:
   "syncthing"
   "bitwarden"
   "transmission"
+  "raindropio"
 
   # Entertainment Tools
   "steam"
